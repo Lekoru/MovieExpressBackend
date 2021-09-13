@@ -1,0 +1,22 @@
+{
+  "name": "moviebackendtask",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lekoru/MovieExpressBackend.git"
+  },
+  "author": "Adrian Pietrowski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lekoru/MovieExpressBackend/issues"
+  },
+  "homepage": "https://github.com/Lekoru/MovieExpressBackend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
