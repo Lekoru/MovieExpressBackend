@@ -4,13 +4,14 @@ let router = express.Router();
 const fs = require("fs");
 const URL = require("url").URL;
 
-function loadJSON(filename = ''){
+const loadJSON = (filename = '') => {
     return JSON.parse(
         fs.existsSync(filename) 
         ?fs.readFileSync(filename).toString()
         : 'null'
     )
 };
+
 const IsUrlValid = (urlString = "") =>{
     try{
         new URL(urlString);
@@ -19,6 +20,13 @@ const IsUrlValid = (urlString = "") =>{
         return false;
     }
 };
+
+const saveJSON = ( movieObj = "") =>{
+    return fs.writeFileSync(
+        "./data/db.json",
+        JSON.stringify(movieObj, null, 2)
+    )
+}
 
 const data = loadJSON("./data/db.json");
 
@@ -105,7 +113,7 @@ router
                 .status(400)
                 .json({error: 'Actor can\'t have a number in name'})
         }
-        
+
         //Check if Plot isn't shorter than 3 characters
         if(body.plot && body.plot.length < 3){
             return res
@@ -121,21 +129,24 @@ router
         }
 
         const movie = {
+            id: data.movies.length + 1,
             genres: body.genres,
             title: body.title,
-            year: parseFloat(body.year),
-            runtime: parseFloat(body.runtime),
+            year: body.year,
+            runtime: body.runtime,
             director: body.director,
             actors: body.actors,
             plot: body.plot,
             posterUrl: body.posterUrl
         }
 
-        console.log(movie);
+        data.movies.push(movie);
+        saveJSON(data);
 
         return res 
             .status(201)
             .json(movie);
     });
+
 
 module.exports = router;
