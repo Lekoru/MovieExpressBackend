@@ -4,6 +4,18 @@ var i = 0;
  
 
 var metody = {
+    changeOnObj: (map1) => {
+        var map2 = new Map([...map1.entries()].sort((a,b) => b[1] - a[1]));
+        var it = map2.values();
+        var movies = [];
+        i = 0;
+        while (i < map2.size ){
+            movies.push(it.next().value);
+            i++;
+        }
+        return movies;
+    },
+
     fitingDuration: (movies, duration) =>{
         var map1 = new Map();
         i = 0;
@@ -35,7 +47,7 @@ var metody = {
             i++;
         }
         return foundMovies;
-   },
+   }
 }
 
 module.exports = metody;

@@ -9,50 +9,64 @@ const data = postFunct.loadJSON("./data/db.json");
 router
     .route('/findMovie')
     .get((req, res) => {
-        var map1 = new Map();
-        var body = req.body;
-        var movies = data.movies;
-        var foundMovies = [];
+            var map1 = new Map();
+            var body = req.body;
+            var movies = data.movies;
+            var foundMovies = [];
 
-    if(!body.duration && !body.genres) {
-        return res
-            .status(200)
-            .json(movies[Math.floor(Math.random() * (movies.length - 1)) + 1]);
-    } else if ( body.duration && body.genres ){
         
-    } else {
-
-        //Duration parameter only
-        if (body.duration && !body.genres){
-            if(!isNaN(parseInt(body.duration))){
-                map1 = getFunct.fitingDuration(movies, parseInt(body.duration));
-                
-                if(map1.size > 0){
-                    return res
-                    .status(200)
-                    .json(map1.get(Math.floor(Math.random() * (map1.size - 1)) + 1))
-                } else {
-                    return res
-                    .status(400)
-                    .json({error: `There's no movie with duration close to ${parseInt(body.duration)}`});
-                }
-            }
-            else {
-                return res
-                .status(400)
-                .json({error: "Duration should be a number"});
-            }
-        } 
-        //Genres parameter only
-        else {
-            foundMovies = getFunct.fitingGenres(movies, body.genres);
+        if(!body.duration && !body.genres) {
+            //None parameter was specified
             return res
                 .status(200)
-                .json(foundMovies);
+                .json(movies[Math.floor(Math.random() * (movies.length - 1)) + 1]);
+        } else if ( body.duration && body.genres ){
+            //Both parameters was specified
+            map1 = getFunct.fitingDuration(movies, parseInt(body.duration));
+            if(map1.size > 0){
+                movies = getFunct.changeOnObj(map1);
+                foundMovies = getFunct.fitingGenres(movies, body.genres);
+
+                return res
+                    .status(200)
+                    .json(foundMovies)
+            } else {
+                return res
+                    .status(400)
+                    .json({error: "There's no movies within those categories."})
+            }
+        } else {
+
+            //Only duration was specified
+            if (body.duration && !body.genres){
+                if(!isNaN(parseInt(body.duration))){
+                    map1 = getFunct.fitingDuration(movies, parseInt(body.duration));
+                    
+                    if(map1.size > 0){
+                        return res
+                        .status(200)
+                        .json(map1.get(Math.floor(Math.random() * (map1.size - 1)) + 1))
+                    } else {
+                        return res
+                        .status(400)
+                        .json({error: `There's no movie with duration close to ${parseInt(body.duration)}`});
+                    }
+                }
+                else {
+                    return res
+                    .status(400)
+                    .json({error: "Duration should be a number"});
+                }
+            } 
+            //Only genres was specified
+            else {
+                foundMovies = getFunct.fitingGenres(movies, body.genres);
+                return res
+                    .status(200)
+                    .json(foundMovies);
+            }
+
         }
-
-    }
-
     });
 
 router
@@ -157,6 +171,5 @@ router
             .status(201)
             .json(movie);
     });
-
 
 module.exports = router;
