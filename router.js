@@ -9,8 +9,8 @@ router
     const data = funcGetPost.loadJSON('./data/db.json')
     let moviesMap = new Map()
     const body = req.body
-    const movies = data.movies
     let foundMovies = []
+    const movies = data.movies
 
     if (!body.duration && !body.genres) {
       // None parameter was specified
