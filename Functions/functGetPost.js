@@ -11,7 +11,6 @@ const method = {
   fittingGenres: (movies, genres) => {
     // Fitting genres
     const movieMap = new Map()
-    const foundMovies = []
     let i = 0
     for (const movie of movies) {
       i = method.checkGenres(genres, movie.genres)
@@ -21,6 +20,7 @@ const method = {
     }
     const movieMap2 = new Map([...movieMap.entries()].sort((a, b) => b[1] - a[1]))
     const iterator = movieMap2.keys()
+    const foundMovies = []
     i = 0
     while (i < movieMap2.size) {
       foundMovies.push(iterator.next().value)
