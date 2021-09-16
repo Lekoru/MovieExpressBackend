@@ -10,23 +10,17 @@ const method = {
 
   fittingGenres: (movies, genres) => {
     // Fitting genres
-    const movieMap = new Map()
     let i = 0
-    for (const movie of movies) {
-      i = method.checkGenres(genres, movie.genres)
-      if (i.matched > 0) {
-        movieMap.set(movie, i.matched)
-      }
-    }
-    const movieMap2 = new Map([...movieMap.entries()].sort((a, b) => b[1] - a[1]))
-    const iterator = movieMap2.keys()
-    const foundMovies = []
-    i = 0
-    while (i < movieMap2.size) {
-      foundMovies.push(iterator.next().value)
-      i++
-    }
-    return foundMovies
+    const movieMap = movies.filter((movie) => {
+      i = method.checkGenres(movie.genres, genres)
+      return (i.matched > 0)
+    }).map((movie) => {
+      i = method.checkGenres(movie.genres, genres)
+      return { movie, match: i.matched }
+    }).sort((a, b) => b.match - a.match)
+    return movieMap.map((movie) => {
+      return [movie.movie]
+    })
   },
 
   loadJSON: (filename = '') => {
