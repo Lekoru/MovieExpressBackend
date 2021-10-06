@@ -5,7 +5,7 @@ const funcGetPost = require('./Functions/functGetPost')
 
 router
   .route('/findMovie')
-  .get((req, res) => {
+  .post((req, res) => {
     const data = funcGetPost.loadJSON('./data/db.json')
     let moviesMap = new Map()
     const body = req.body
