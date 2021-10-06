@@ -1,7 +1,10 @@
 <template>
   <v-row>
     <v-col class="content">
-      <h1>Author: Adrian Pietrowski</h1>
+      <div>
+        <h1>Error404!</h1>
+        <h2><p>The website you are looking for does not exist</p></h2>
+      </div>
     </v-col>
   </v-row>
 </template>
