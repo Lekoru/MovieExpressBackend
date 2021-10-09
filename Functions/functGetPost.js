@@ -19,7 +19,7 @@ const method = {
       return { movie, match: i.matched }
     }).sort((a, b) => b.match - a.match)
     return movieMap.map((movie) => {
-      return [movie.movie]
+      return movie.movie
     })
   },
 

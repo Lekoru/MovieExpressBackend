@@ -9,14 +9,16 @@ router
     const data = funcGetPost.loadJSON('./data/db.json')
     let moviesMap = new Map()
     const body = req.body
-    let foundMovies = []
+    let foundMovies = null
     const movies = data.movies
+    const genres = data.genres
+    const chGen = funcGetPost.checkGenres(body.genres, genres)
 
     if (!body.duration && !body.genres) {
       // None parameter was specified
-      if (body.duration < 1) {
+      if (isNaN(body.duration) && body.duration < 1) {
         return res
-          .status(400)
+          .status(401)
           .json({ error: 'Duration of the movie can\'t be this short' })
       } else {
         return res
@@ -27,29 +29,38 @@ router
       // Both parameters was specified
       if (parseInt(body.duration) > 0) {
         moviesMap = funcGetPost.fittingDuration(movies, parseInt(body.duration))
-        if (moviesMap.length > 0) {
+        if (moviesMap.length > 0 && chGen.matched > 0) {
           foundMovies = funcGetPost.fittingGenres(moviesMap, body.genres)
+          console.log(moviesMap)
           if (foundMovies.length > 0) {
             return res
               .status(200)
               .json(foundMovies)
           } else {
             return res
-              .status(400)
+              .status(402)
               .json({ error: 'There is no movie with those genres' })
           }
+        } else if (moviesMap.length > 0 && body.genres.length < 1) {
+          return res
+            .status(200)
+            .json(moviesMap[Math.floor(Math.random() * (moviesMap.length - 1)) + 1])
+        } else if (moviesMap.length < 1) {
+          return res
+            .status(403)
+            .json({ error: `There's no movie with duration: ${parseInt(body.duration)}` })
         } else {
           return res
-            .status(400)
-            .json({ error: `There's no movie with duration: ${parseInt(body.duration)}` })
+            .status(404)
+            .json({ error: `There's no movie with genre: ${chGen.genName}` })
         }
       } else if (isNaN(body.duration)) {
         return res
-          .status(400)
+          .status(405)
           .json({ error: 'Duration should be a number' })
       } else {
         return res
-          .status(400)
+          .status(406)
           .json({ error: 'Duration of the movie can\'t be this short' })
       }
     } else {
@@ -64,24 +75,34 @@ router
               .json(moviesMap[Math.floor(Math.random() * (moviesMap.length - 1)) + 1])
           } else {
             return res
-              .status(400)
+              .status(407)
               .json({ error: `There's no movie with duration close to ${parseInt(body.duration)}` })
           }
         } else if (parseInt(body.duration) < 0) {
           return res
-            .status(400)
+            .status(408)
             .json({ error: 'Duration of the movie can\'t be this short' })
         } else {
           return res
-            .status(400)
+            .status(409)
             .json({ error: 'Duration should be a number' })
         }
       } else {
         // Only genres was specified
-        foundMovies = funcGetPost.fittingGenres(movies, body.genres)
-        return res
-          .status(200)
-          .json(foundMovies)
+        if (chGen.matched > 0) {
+          foundMovies = funcGetPost.fittingGenres(movies, body.genres)
+          return res
+            .status(200)
+            .json(foundMovies)
+        } else if (body.genres.length > 0 && chGen.matched < 1) {
+          return res
+            .status(410)
+            .json({ error: `There's no movie with genre: ${chGen.genName}` })
+        } else {
+          return res
+            .status(200)
+            .json(movies[Math.floor(Math.random() * (movies.length - 1)) + 1])
+        }
       }
     }
   })
@@ -96,7 +117,7 @@ router
     // Check if all required data are set
     if (!body.genres || !body.title || !body.year || !body.runtime || !body.director) {
       return res
-        .status(400)
+        .status(401)
         .json({ error: 'Some of required data are missing (genres, title, year, runtime or director)' })
     }
 
@@ -104,21 +125,21 @@ router
     const chGen = funcGetPost.checkGenres(body.genres, genres)
     if (chGen.matched !== body.genres.length) {
       return res
-        .status(400)
+        .status(402)
         .json({ error: `There is no genre like ${chGen[1]}. Try some of those: ${genres.join(', ')}` })
     }
 
     // Check if title name isn't to long
     if (body.title.length > 255) {
       return res
-        .status(400)
+        .status(403)
         .json({ error: 'Title to long, it\'s max to 255 characters' })
     }
 
     // Check if Check if title start with numbers
     if (!isNaN(parseFloat(body.title))) {
       return res
-        .status(400)
+        .status(404)
         .json({ error: 'Title can\'t be a number only' })
     }
 
@@ -127,7 +148,7 @@ router
       const year = parseFloat(body.year)
       if (isNaN(year)) {
         return res
-          .status(400)
+          .status(405)
           .json({ error: 'Year must be a number' })
       }
     }
@@ -135,7 +156,7 @@ router
     // Check if year isn't from before first movie staged
     if (body.year < 1985) {
       return res
-        .status(400)
+        .status(406)
         .json({ error: 'The first movie was staged in 1985' })
     }
 
@@ -144,7 +165,7 @@ router
       const runtime = parseFloat(body.runtime)
       if (isNaN(runtime)) {
         return res
-          .status(400)
+          .status(407)
           .json({ error: 'Runtime must be a number' })
       }
     }
@@ -152,35 +173,35 @@ router
     // Check if Runtime isn't to short
     if (body.runtime <= 0) {
       return res
-        .status(400)
+        .status(408)
         .json({ error: 'Runtime can\'t be that short' })
     }
 
     // Check if director name isn't to long
     if (body.director.length > 255) {
       return res
-        .status(400)
+        .status(409)
         .json({ error: 'Director i s to long, it\'s max to 255 characters' })
     }
 
     // Check if Actor is set and isn't starting with a number
     if (body.actors && isNaN(parseFloat(body.actors))) {
       return res
-        .status(400)
+        .status(410)
         .json({ error: 'Actor can\'t have a number in name' })
     }
 
     // Check if Plot isn't shorter than 3 characters
     if (body.plot && body.plot.length < 3) {
       return res
-        .status(400)
+        .status(411)
         .json({ error: 'Plot can\'t have less than 3 characters' })
     }
 
     // Check if poster Url is valid
     if (body.posterUrl && !funcGetPost.IsUrlValid(body.posterUrl)) {
       return res
-        .status(400)
+        .status(412)
         .json({ error: 'Url should have proper structure. It need to have http:// or https:// at the beggining' })
     }
 
