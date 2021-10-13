@@ -2160,6 +2160,19 @@
         "Comedy"
       ],
       "director": "Chris Miller"
+    },
+    {
+      "id": 148,
+      "title": "2012",
+      "year": "2009",
+      "runtime": "158",
+      "genres": [
+        "Sci-Fi"
+      ],
+      "director": "Roland Emmerich",
+      "actors": "",
+      "plot": "",
+      "posterUrl": ""
     }
   ]
 }
