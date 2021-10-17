@@ -26,7 +26,6 @@ export default {
 </script>
 
 <style scoped>
-
 .cont {
   padding-left: 0;
   padding-right: 0;

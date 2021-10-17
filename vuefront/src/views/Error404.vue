@@ -4,7 +4,12 @@
       <v-col class="content">
         <div>
           <h1>Error404!</h1>
-          <h2><p>The website you are looking for does not exist</p></h2>
+          <h2>
+            <p>
+              The website you are looking for does not exist. Try going
+              <router-link :to="{ name: 'Home' }">home</router-link>
+            </p>
+          </h2>
         </div>
       </v-col>
     </v-row>
