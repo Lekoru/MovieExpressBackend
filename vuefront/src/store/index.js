@@ -72,6 +72,7 @@ export default new Vuex.Store({
     async ADD_MOVIE(context, payload) {
       context.commit("setAddMovieStatus", false);
       context.commit("setAddMovieMsg", "");
+      context.commit("setMovieAlertType", "");
       try {
         await MovieService.addMovie(
           payload.title,

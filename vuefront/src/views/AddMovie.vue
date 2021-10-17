@@ -86,25 +86,7 @@
     </v-row>
     <v-row justify="center" class="addMovieFields">
       <v-col class="details" align="end" md="1">
-        <v-btn
-          rounded
-          @click="
-            ADD_MOVIE({
-              title: title,
-              addMovieGen: addMovieGen,
-              year: year,
-              runtime: runtime,
-              director: director,
-              actors: actors,
-              plot: plot,
-              posterUrl: posterUrl,
-            }),
-              $refs.form.reset()
-          "
-          color="success"
-        >
-          Add
-        </v-btn>
+        <v-btn rounded @click="addmovie()" color="success"> Add </v-btn>
       </v-col>
       <v-col class="details" align="end" md="1">
         <v-btn rounded @click="setMovieBtn(false)" color="error">Close</v-btn>
@@ -131,7 +113,7 @@ export default {
         (v) => !!v || "Year is required",
         (v) => (!!v && typeof v != "number") || "Year have to be a number",
         (v) =>
-          (!!v && v > 1985) ||
+          (!!v && v > 1895) ||
           "You can't add a movie from the year before 1895 because there were no movies then.",
       ],
       runtime: null,
@@ -154,8 +136,42 @@ export default {
       posterUrl: "",
     };
   },
+  computed: {
+    clean() {
+      return this.$store.state.movieAlertType;
+    },
+  },
+  watch: {
+    clean(value) {
+      if (value == "success") {
+        this.$refs.form.reset();
+      }
+    },
+  },
   methods: {
     ...mapActions(["setMovieBtn", "SET_MOVIES", "SET_GENRES", "ADD_MOVIE"]),
+    addmovie() {
+      if (
+        this.title != "" &&
+        this.addMovieGen != "" &&
+        this.year != "" &&
+        this.runtime != "" &&
+        this.director != ""
+      ) {
+        this.ADD_MOVIE({
+          title: this.title,
+          addMovieGen: this.addMovieGen,
+          year: this.year,
+          runtime: this.runtime,
+          director: this.director,
+          actors: this.actors,
+          plot: this.plot,
+          posterUrl: this.posterUrl,
+        });
+      } else {
+        this.$refs.form.validate();
+      }
+    },
   },
 };
 </script>

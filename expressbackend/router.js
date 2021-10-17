@@ -3,16 +3,16 @@ const express = require("express");
 const router = express.Router();
 const funcGetPost = require("./Functions/functGetPost");
 
-router.route("/getGenres").post((req, res) => {
+router.route("/getGenres").get((req, res) => {
   const data = funcGetPost.loadJSON("./data/db.json");
   const genres = data.genres;
   return res.status(200).json(genres);
 });
 
-router.route("/findMovie").post((req, res) => {
+router.route("/findMovie").get((req, res) => {
   const data = funcGetPost.loadJSON("./data/db.json");
   let moviesMap = new Map();
-  const body = req.body;
+  const body = req.query;
   let foundMovies = null;
   const movies = data.movies;
   const genres = data.genres;

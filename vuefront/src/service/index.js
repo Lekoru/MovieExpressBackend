@@ -4,9 +4,11 @@ export const MovieService = {
   getMovies(duration, genres) {
     return new Promise((resolve, reject) => {
       axios
-        .post("http://localhost:5000/findMovie", {
-          duration: duration,
-          genres: genres,
+        .get("http://localhost:5000/findMovie", {
+          params: {
+            duration: duration,
+            genres: genres,
+          },
         })
         .then((response) => {
           if (response.data != "") {
@@ -27,7 +29,7 @@ export const MovieService = {
   getGenres() {
     return new Promise((resolve, reject) => {
       axios
-        .post("http://localhost:5000/getGenres")
+        .get("http://localhost:5000/getGenres")
         .then((response) => {
           resolve(response.data);
         })

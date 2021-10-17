@@ -39,17 +39,14 @@
     </v-row>
     <v-row class="datatable">
       <v-col>
-        <v-alert v-if="genres.length < 1 && duration == ''" type="info">
+        <v-alert v-if="noFilters" type="info">
           A random movie was selected because no filter was specified.
         </v-alert>
         <v-alert
-          v-if="$store.state.movies.length < 1 && genres != ''"
+          v-if="$store.state.movies.length < 1 && !$store.state.isLoading"
           type="info"
         >
-          <span v-if="genres.length == 1">
-            No movie was found with this genre.
-          </span>
-          <span v-else> No movie was found with these genres. </span>
+          <span> No movie found </span>
         </v-alert>
         <v-alert v-if="$store.state.loadMovieError" type="info">
           <span>
@@ -217,12 +214,27 @@ export default {
       imgFailed: false,
       movieData: {},
       movieDetail: false,
+      noFilters: false,
     };
   },
   components: {
     addMovie,
   },
-  computed: {},
+  computed: {
+    getMovies() {
+      return this.$store.state.movies;
+    },
+  },
+  watch: {
+    getMovies(value) {
+      if (value.length >= 1) {
+        this.noFilters = false;
+        if (this.genres.length === 0) {
+          this.noFilters = true;
+        }
+      }
+    },
+  },
   methods: {
     ...mapActions(["setMovieBtn", "SET_MOVIES", "SET_GENRES"]),
     movieDet(item) {
