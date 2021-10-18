@@ -1,6 +1,6 @@
 # General
 
-This is an Api for a movie database that allows the user to add new movies and search for them using 2 filters **_genres_** and **_duration_**
+This is an Web App for a movie database that allows the user to add new movies and search for them using 2 filters **_genres_** and **_duration_**
 If neither is specified, the movie displayed will be a random movie from the database.
 
 ## Backend
@@ -8,7 +8,12 @@ If neither is specified, the movie displayed will be a random movie from the dat
 How to run backend
 
 ```
-cd .\expressbackend\
+Inside expressbackend folder use:
+
+To install components:
+npm i
+
+To start backend:
 npm run dev
 ```
 
@@ -25,7 +30,12 @@ Server up on IP:port
 How to run frontend
 
 ```
-cd .\vuefront\
+Inside vuefront folder use:
+
+To install components:
+npm i
+
+To start frontend:
 npm run serve
 ```
 
