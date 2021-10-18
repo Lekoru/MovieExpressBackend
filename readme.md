@@ -1,3 +1,8 @@
+# General
+
+This is an Api for a movie database that allows the user to add new movies and search for them using 2 filters **_genres_** and **_duration_**
+If neither is specified, the movie displayed will be a random movie from the database.
+
 ## Backend
 
 How to run backend
@@ -10,7 +15,7 @@ npm run dev
 Successful launch will show
 
 ```
-Server up on ip:port
+Server up on IP:port
 /addMovie - add movie
 /findMovie - find movie
 ```
@@ -24,7 +29,10 @@ cd .\vuefront\
 npm run serve
 ```
 
-## General
+Successful launch will show
 
-This is an Api for a movie database that allows the user to add new movies and search for them using 2 filters _genres_ and _duration_
-If neither is specified, the movie displayed will be a random movie from the database.
+```
+  App running at:
+  - Local:   http://localhost:port/
+  - Network: http://IP:port/
+```
